@@ -14,24 +14,24 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'DevOps Engineer Portfolio | Building Reliable Infrastructure',
-  description: 'Experienced DevOps Engineer specializing in CI/CD pipelines, Kubernetes, Terraform, and cloud infrastructure. Building reliable infrastructure, one pipeline at a time.',
-  keywords: ['DevOps', 'Kubernetes', 'Docker', 'Terraform', 'AWS', 'CI/CD', 'Infrastructure as Code', 'Cloud Engineer'],
-  authors: [{ name: 'DevOps Engineer' }],
+  title: 'Tuheen | DevOps Engineer Portfolio',
+  description: 'DevOps Engineer with 5+ years of experience designing CI/CD pipelines, cloud infrastructure, and container orchestration. Building reliable infrastructure, one pipeline at a time.',
+  keywords: ['DevOps', 'Kubernetes', 'Docker', 'Terraform', 'AWS', 'CI/CD', 'Infrastructure as Code', 'Cloud Engineer', 'Tuheen'],
+  authors: [{ name: 'Tuheen' }],
   openGraph: {
-    title: 'DevOps Engineer Portfolio',
+    title: 'Tuheen | DevOps Engineer',
     description: 'Building reliable infrastructure, one pipeline at a time',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'DevOps Engineer Portfolio',
+    title: 'Tuheen | DevOps Engineer',
     description: 'Building reliable infrastructure, one pipeline at a time',
   },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0891b2',
+  themeColor: '#0a0a0f',
   width: 'device-width',
   initialScale: 1,
 }

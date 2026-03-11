@@ -11,7 +11,11 @@ import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="relative min-h-screen overflow-hidden bg-[#0a0a0f]">
+      {/* Global background effects */}
+      <div className="pointer-events-none fixed inset-0 dot-grid" />
+      <div className="pointer-events-none fixed inset-0 noise-overlay" />
+      
       <Header />
       <Hero />
       <About />

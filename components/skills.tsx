@@ -2,184 +2,250 @@
 
 import { motion, useInView } from "framer-motion"
 import { useRef, useState } from "react"
-import { 
-  Container, 
-  Cloud, 
-  GitBranch, 
-  Server, 
-  Activity, 
-  Code2,
-  Box,
-  Layers,
-  Workflow,
-  CloudCog,
-  LineChart,
-  Terminal
-} from "lucide-react"
 
 interface Skill {
   name: string
   level: number
-  icon: React.ReactNode
 }
 
 interface SkillCategory {
+  id: string
   title: string
-  icon: React.ReactNode
   skills: Skill[]
 }
 
 const skillCategories: SkillCategory[] = [
   {
+    id: "containers",
     title: "Containers",
-    icon: <Container className="w-5 h-5" />,
     skills: [
-      { name: "Docker", level: 95, icon: <Box className="w-4 h-4" /> },
-      { name: "Kubernetes", level: 90, icon: <Layers className="w-4 h-4" /> },
-      { name: "Helm", level: 85, icon: <Workflow className="w-4 h-4" /> },
-      { name: "Podman", level: 75, icon: <Container className="w-4 h-4" /> },
+      { name: "Docker", level: 95 },
+      { name: "Kubernetes", level: 90 },
+      { name: "Helm", level: 85 },
+      { name: "Podman", level: 75 },
     ],
   },
   {
+    id: "iac",
     title: "IaC",
-    icon: <Server className="w-5 h-5" />,
     skills: [
-      { name: "Terraform", level: 95, icon: <CloudCog className="w-4 h-4" /> },
-      { name: "Ansible", level: 85, icon: <Server className="w-4 h-4" /> },
-      { name: "Pulumi", level: 70, icon: <Code2 className="w-4 h-4" /> },
-      { name: "CloudFormation", level: 80, icon: <Cloud className="w-4 h-4" /> },
+      { name: "Terraform", level: 92 },
+      { name: "Ansible", level: 88 },
+      { name: "Pulumi", level: 70 },
+      { name: "CloudFormation", level: 80 },
     ],
   },
   {
+    id: "cicd",
     title: "CI/CD",
-    icon: <GitBranch className="w-5 h-5" />,
     skills: [
-      { name: "GitHub Actions", level: 95, icon: <GitBranch className="w-4 h-4" /> },
-      { name: "Jenkins", level: 85, icon: <Workflow className="w-4 h-4" /> },
-      { name: "ArgoCD", level: 90, icon: <GitBranch className="w-4 h-4" /> },
-      { name: "GitLab CI", level: 80, icon: <GitBranch className="w-4 h-4" /> },
+      { name: "GitHub Actions", level: 95 },
+      { name: "Jenkins", level: 85 },
+      { name: "ArgoCD", level: 82 },
+      { name: "GitLab CI", level: 80 },
     ],
   },
   {
+    id: "cloud",
     title: "Cloud",
-    icon: <Cloud className="w-5 h-5" />,
     skills: [
-      { name: "AWS", level: 95, icon: <Cloud className="w-4 h-4" /> },
-      { name: "Azure", level: 80, icon: <Cloud className="w-4 h-4" /> },
-      { name: "GCP", level: 75, icon: <Cloud className="w-4 h-4" /> },
+      { name: "AWS", level: 90 },
+      { name: "Azure", level: 78 },
+      { name: "GCP", level: 75 },
     ],
   },
   {
+    id: "monitoring",
     title: "Monitoring",
-    icon: <Activity className="w-5 h-5" />,
     skills: [
-      { name: "Prometheus", level: 90, icon: <LineChart className="w-4 h-4" /> },
-      { name: "Grafana", level: 90, icon: <Activity className="w-4 h-4" /> },
-      { name: "ELK Stack", level: 80, icon: <LineChart className="w-4 h-4" /> },
-      { name: "Datadog", level: 75, icon: <Activity className="w-4 h-4" /> },
+      { name: "Prometheus", level: 88 },
+      { name: "Grafana", level: 90 },
+      { name: "ELK Stack", level: 82 },
+      { name: "Datadog", level: 78 },
     ],
   },
   {
+    id: "languages",
     title: "Languages",
-    icon: <Code2 className="w-5 h-5" />,
     skills: [
-      { name: "Python", level: 85, icon: <Code2 className="w-4 h-4" /> },
-      { name: "Bash", level: 95, icon: <Terminal className="w-4 h-4" /> },
-      { name: "Go", level: 70, icon: <Code2 className="w-4 h-4" /> },
-      { name: "YAML", level: 95, icon: <Code2 className="w-4 h-4" /> },
+      { name: "Python", level: 88 },
+      { name: "Bash", level: 92 },
+      { name: "Go", level: 75 },
+      { name: "YAML", level: 95 },
     ],
   },
 ]
 
-function SkillCard({ category, index }: { category: SkillCategory; index: number }) {
-  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-50px" })
+const categories = [
+  "All",
+  "Containers",
+  "IaC",
+  "CI/CD",
+  "Cloud",
+  "Monitoring",
+  "Languages",
+]
+
+function SkillCard({
+  skill,
+  index,
+  isInView,
+}: {
+  skill: Skill
+  index: number
+  isInView: boolean
+}) {
+  const [isHovered, setIsHovered] = useState(false)
 
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="group relative p-6 rounded-xl bg-card/30 backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-300"
+      transition={{ delay: index * 0.05, duration: 0.4 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`group glass-card card-shine relative overflow-hidden rounded-xl p-5 transition-all duration-300 ${
+        isHovered
+          ? "-translate-y-1 shadow-[0_0_30px_rgba(6,182,212,0.15)]"
+          : ""
+      }`}
+      style={{
+        borderColor: isHovered ? "rgba(6, 182, 212, 0.5)" : undefined,
+      }}
     >
-      {/* Glow effect on hover */}
-      <div className="absolute inset-0 rounded-xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      
-      {/* Header */}
-      <div className="relative flex items-center gap-3 mb-6">
-        <div className="p-2 rounded-lg bg-primary/10 text-primary">
-          {category.icon}
-        </div>
-        <h3 className="text-lg font-semibold">{category.title}</h3>
-      </div>
+      {/* Glow effect */}
+      <div
+        className={`absolute inset-0 rounded-xl bg-gradient-to-br from-[#06b6d4]/10 to-[#8b5cf6]/10 transition-opacity duration-300 ${
+          isHovered ? "opacity-100" : "opacity-0"
+        }`}
+      />
 
-      {/* Skills */}
-      <div className="relative space-y-4">
-        {category.skills.map((skill) => (
-          <div
-            key={skill.name}
-            onMouseEnter={() => setHoveredSkill(skill.name)}
-            onMouseLeave={() => setHoveredSkill(null)}
-            className="space-y-2"
-          >
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <span className="text-primary">{skill.icon}</span>
-                {skill.name}
-              </div>
-              <span className={`text-xs transition-opacity ${hoveredSkill === skill.name ? "opacity-100" : "opacity-0"}`}>
-                {skill.level}%
-              </span>
-            </div>
-            <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={isInView ? { width: `${skill.level}%` } : {}}
-                transition={{ delay: index * 0.1 + 0.3, duration: 0.8, ease: "easeOut" }}
-                className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
-              />
-            </div>
+      {/* Content */}
+      <div className="relative z-10">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#1e293b] text-2xl">
+          {getSkillIcon(skill.name)}
+        </div>
+        <h4 className="mb-3 font-semibold text-[#f1f5f9]">{skill.name}</h4>
+
+        {/* Progress bar - only visible on hover */}
+        <div
+          className={`transition-all duration-300 ${
+            isHovered ? "opacity-100" : "opacity-0 h-0"
+          }`}
+        >
+          <div className="flex items-center justify-between text-xs text-[#94a3b8] mb-1">
+            <span>Proficiency</span>
+            <span>{skill.level}%</span>
           </div>
-        ))}
+          <div className="h-1.5 overflow-hidden rounded-full bg-[#1e293b]">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={isHovered ? { width: `${skill.level}%` } : { width: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="h-full rounded-full bg-gradient-to-r from-[#06b6d4] to-[#8b5cf6]"
+            />
+          </div>
+        </div>
       </div>
     </motion.div>
   )
 }
 
+function getSkillIcon(name: string): string {
+  const icons: Record<string, string> = {
+    Docker: "🐳",
+    Kubernetes: "☸️",
+    Helm: "⎈",
+    Podman: "🦭",
+    Terraform: "🏗️",
+    Ansible: "🅰️",
+    Pulumi: "🫁",
+    CloudFormation: "☁️",
+    "GitHub Actions": "⚡",
+    Jenkins: "🔧",
+    ArgoCD: "🐙",
+    "GitLab CI": "🦊",
+    AWS: "☁️",
+    Azure: "🔷",
+    GCP: "🌐",
+    Prometheus: "🔥",
+    Grafana: "📊",
+    "ELK Stack": "🦌",
+    Datadog: "🐕",
+    Python: "🐍",
+    Bash: "💻",
+    Go: "🐹",
+    YAML: "📄",
+  }
+  return icons[name] || "🔧"
+}
+
 export function Skills() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [activeCategory, setActiveCategory] = useState("All")
+
+  const filteredSkills =
+    activeCategory === "All"
+      ? skillCategories.flatMap((cat) => cat.skills)
+      : skillCategories.find(
+          (cat) => cat.title.toLowerCase() === activeCategory.toLowerCase()
+        )?.skills || []
 
   return (
-    <section id="skills" className="py-20 md:py-32 relative">
-      <div className="container mx-auto px-4">
+    <section id="skills" className="relative py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-6">
         <motion.div ref={ref}>
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.2 }}
-              className="text-primary font-mono text-sm"
-            >
-              {"// 02. Skills & Tools"}
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.3 }}
-              className="text-3xl md:text-4xl font-bold mt-2"
-            >
-              Technical Expertise
-            </motion.h2>
-          </div>
+          {/* Section Label */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.2 }}
+            className="section-label mb-4"
+          >
+            TECH STACK
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.3 }}
+            className="mb-10 text-3xl font-bold text-[#f1f5f9] md:text-4xl"
+          >
+            Tools & Technologies I Work With
+          </motion.h2>
+
+          {/* Category Tabs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.4 }}
+            className="mb-10 flex flex-wrap gap-2"
+          >
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-300 ${
+                  activeCategory === category
+                    ? "bg-gradient-to-r from-[#06b6d4] to-[#8b5cf6] text-[#0a0a0f]"
+                    : "glass-card text-[#94a3b8] hover:text-[#f1f5f9]"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </motion.div>
 
           {/* Skills Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {skillCategories.map((category, index) => (
-              <SkillCard key={category.title} category={category} index={index} />
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {filteredSkills.map((skill, index) => (
+              <SkillCard
+                key={skill.name}
+                skill={skill}
+                index={index}
+                isInView={isInView}
+              />
             ))}
           </div>
         </motion.div>

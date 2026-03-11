@@ -4,7 +4,15 @@ import { motion, useInView } from "framer-motion"
 import { useRef, useEffect, useState } from "react"
 import { User } from "lucide-react"
 
-function AnimatedCounter({ end, label, suffix = "" }: { end: number; label: string; suffix?: string }) {
+function AnimatedCounter({
+  end,
+  label,
+  suffix = "",
+}: {
+  end: number
+  label: string
+  suffix?: string
+}) {
   const [count, setCount] = useState(0)
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
@@ -14,7 +22,7 @@ function AnimatedCounter({ end, label, suffix = "" }: { end: number; label: stri
       let start = 0
       const duration = 2000
       const increment = end / (duration / 16)
-      
+
       const timer = setInterval(() => {
         start += increment
         if (start >= end) {
@@ -30,11 +38,14 @@ function AnimatedCounter({ end, label, suffix = "" }: { end: number; label: stri
   }, [isInView, end])
 
   return (
-    <div ref={ref} className="text-center">
-      <div className="text-3xl md:text-4xl font-bold text-primary">
-        {count}{suffix}
+    <div ref={ref} className="glass-card rounded-xl p-4 text-center">
+      <div className="text-3xl font-bold md:text-4xl">
+        <span className="gradient-text">
+          {count}
+          {suffix}
+        </span>
       </div>
-      <div className="text-sm text-muted-foreground mt-1">{label}</div>
+      <div className="mt-1 text-sm text-[#94a3b8]">{label}</div>
     </div>
   )
 }
@@ -44,88 +55,96 @@ export function About() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section id="about" className="py-20 md:py-32 relative">
-      <div className="container mx-auto px-4">
+    <section id="about" className="relative py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-6">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.2 }}
-              className="text-primary font-mono text-sm"
-            >
-              {"// 01. About Me"}
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.3 }}
-              className="text-3xl md:text-4xl font-bold mt-2"
-            >
-              Who I Am
-            </motion.h2>
-          </div>
+          {/* Section Label */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.2 }}
+            className="section-label mb-4"
+          >
+            ABOUT ME
+          </motion.div>
 
-          {/* Content Grid */}
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Photo placeholder */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="relative"
-            >
-              <div className="relative aspect-square max-w-md mx-auto">
-                {/* Glassmorphism card */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl backdrop-blur-sm border border-border" />
-                <div className="absolute inset-4 bg-card/50 rounded-xl backdrop-blur-lg border border-border flex items-center justify-center">
-                  <User className="w-32 h-32 text-muted-foreground/50" />
-                </div>
-                {/* Decorative elements */}
-                <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl" />
-                <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-accent/10 rounded-full blur-2xl" />
-              </div>
-            </motion.div>
-
-            {/* Bio text */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="space-y-6"
-            >
-              <div className="p-6 rounded-xl bg-card/30 backdrop-blur-sm border border-border">
-                <p className="text-muted-foreground leading-relaxed">
-                  I am a passionate DevOps Engineer with over 5 years of experience building 
-                  and maintaining scalable infrastructure. My expertise spans across cloud platforms, 
-                  container orchestration, and CI/CD pipelines.
-                </p>
-                <p className="text-muted-foreground leading-relaxed mt-4">
-                  I specialize in automating everything from code deployment to infrastructure 
-                  provisioning, ensuring high availability and reliability for production systems. 
-                  My goal is to bridge the gap between development and operations, enabling teams 
-                  to ship faster and more confidently.
-                </p>
-              </div>
-
-              {/* Stats */}
+          {/* Glass Card Container */}
+          <div className="glass-card rounded-2xl p-8 md:p-12">
+            <div className="grid items-center gap-12 lg:grid-cols-[40%_60%]">
+              {/* Photo with rotating gradient border */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.7 }}
-                className="grid grid-cols-3 gap-4 p-6 rounded-xl bg-card/30 backdrop-blur-sm border border-border"
+                initial={{ opacity: 0, x: -50 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                className="relative mx-auto"
               >
-                <AnimatedCounter end={5} suffix="+" label="Years Experience" />
-                <AnimatedCounter end={50} suffix="+" label="Pipelines Built" />
-                <AnimatedCounter end={99} suffix=".9%" label="Uptime" />
+                <div className="relative h-64 w-64 md:h-80 md:w-80">
+                  {/* Rotating gradient border */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 10,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-[#06b6d4] to-[#8b5cf6] p-[3px]"
+                  >
+                    <div className="h-full w-full rounded-full bg-[#0a0a0f]" />
+                  </motion.div>
+                  {/* Inner circle with placeholder */}
+                  <div className="absolute inset-3 flex items-center justify-center rounded-full bg-[#111827]">
+                    <User className="h-24 w-24 text-[#94a3b8]/50" />
+                  </div>
+                </div>
               </motion.div>
-            </motion.div>
+
+              {/* Bio content */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="space-y-6"
+              >
+                <h2 className="text-2xl font-bold text-[#f1f5f9] md:text-3xl">
+                  Passionate about automating everything
+                </h2>
+                <p className="text-[#94a3b8] leading-relaxed">
+                  DevOps Engineer with 5+ years of experience designing and
+                  implementing CI/CD pipelines, cloud infrastructure, and
+                  container orchestration. I believe in infrastructure as code,
+                  GitOps, and making deployments boring (in the best way).
+                </p>
+
+                {/* Stats Grid */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.7 }}
+                  className="grid grid-cols-3 gap-4 pt-4"
+                >
+                  <AnimatedCounter
+                    end={5}
+                    suffix="+"
+                    label="Years Experience"
+                  />
+                  <AnimatedCounter
+                    end={50}
+                    suffix="+"
+                    label="Pipelines Built"
+                  />
+                  <AnimatedCounter
+                    end={99}
+                    suffix=".9%"
+                    label="Uptime Achieved"
+                  />
+                </motion.div>
+              </motion.div>
+            </div>
           </div>
         </motion.div>
       </div>
