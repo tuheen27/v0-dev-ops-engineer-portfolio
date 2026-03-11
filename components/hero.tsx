@@ -1,46 +1,48 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import { ChevronDown, Download, FolderOpen } from "lucide-react"
-import { Particles } from "./particles"
-import { FloatingTechIcons } from "./floating-tech-icons"
+import { useRef } from "react"
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
+import { ArrowRight } from "lucide-react"
+
+// Magnetic button component
+function MagneticButton({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
+  const ref = useRef<HTMLButtonElement>(null)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  
+  const springConfig = { stiffness: 150, damping: 15 }
+  const springX = useSpring(x, springConfig)
+  const springY = useSpring(y, springConfig)
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return
+    const rect = ref.current.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+    x.set((e.clientX - centerX) * 0.15)
+    y.set((e.clientY - centerY) * 0.15)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <motion.button
+      ref={ref}
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ x: springX, y: springY }}
+      className="group relative rounded border border-[#06b6d4] px-7 py-4 font-mono text-sm text-[#06b6d4] transition-colors hover:bg-[#06b6d4]/10"
+    >
+      {children}
+    </motion.button>
+  )
+}
 
 export function Hero() {
-  const [typedText, setTypedText] = useState("")
-  const [subtitleText, setSubtitleText] = useState("")
-  const terminalText = "$ deploying portfolio..."
-  const subtitle = "DevOps Engineer"
-
-  useEffect(() => {
-    let index = 0
-    const interval = setInterval(() => {
-      if (index <= terminalText.length) {
-        setTypedText(terminalText.slice(0, index))
-        index++
-      } else {
-        clearInterval(interval)
-      }
-    }, 80)
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      let index = 0
-      const interval = setInterval(() => {
-        if (index <= subtitle.length) {
-          setSubtitleText(subtitle.slice(0, index))
-          index++
-        } else {
-          clearInterval(interval)
-        }
-      }, 100)
-      return () => clearInterval(interval)
-    }, 1500)
-    return () => clearTimeout(timeout)
-  }, [])
-
   const handleNavClick = (href: string) => {
     const element = document.querySelector(href)
     if (element) {
@@ -52,116 +54,61 @@ export function Hero() {
   }
 
   return (
-    <section
-      id="home"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden"
-    >
-      {/* Animated gradient mesh background */}
-      <div className="gradient-mesh" />
+    <section className="relative flex min-h-screen items-center overflow-hidden px-6 lg:px-12">
+      {/* Subtle aurora background */}
+      <div className="aurora-bg" />
 
-      {/* Dot grid overlay */}
-      <div className="absolute inset-0 dot-grid" />
-
-      {/* Noise texture */}
-      <div className="absolute inset-0 noise-overlay" />
-
-      {/* Floating particles */}
-      <Particles />
-
-      {/* Terminal typing text - top left */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="absolute top-24 left-6 font-mono text-sm text-[#06b6d4] md:top-28 md:left-12"
-      >
-        {typedText}
-        <span className="blink">|</span>
-      </motion.div>
-
-      {/* Main content */}
-      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="section-label mb-6 justify-center"
-        >
-          HELLO, I&apos;M
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="mb-4 text-5xl font-extrabold tracking-tight md:text-7xl lg:text-8xl"
-        >
-          <span className="gradient-text">TUHEEN</span>
-        </motion.h1>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="mb-4 h-10 font-mono text-2xl font-semibold text-[#f1f5f9] md:text-3xl"
-        >
-          {subtitleText}
-          <span className="blink text-[#06b6d4]">|</span>
-        </motion.div>
-
+      {/* Content - left aligned */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
         <motion.p
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.9 }}
-          className="mx-auto mb-10 max-w-2xl text-lg text-[#94a3b8] md:text-xl"
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-5 font-mono text-[#06b6d4]"
         >
-          Building reliable infrastructure, one pipeline at a time
+          Hi, my name is
         </motion.p>
 
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.1 }}
-          className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-[clamp(40px,8vw,80px)] font-extrabold leading-[1.1] text-[#ccd6f6]"
         >
-          <button
-            onClick={() => handleNavClick("#projects")}
-            className="group relative flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-[#06b6d4] to-[#8b5cf6] px-8 py-3.5 font-semibold text-[#0a0a0f] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(6,182,212,0.3)]"
-          >
-            <FolderOpen size={20} />
-            View Projects
-          </button>
-          <button className="group relative flex items-center gap-2 rounded-lg border border-transparent bg-transparent px-8 py-3.5 font-semibold text-[#f1f5f9] transition-all duration-300 before:absolute before:inset-0 before:rounded-lg before:border before:border-transparent before:bg-gradient-to-r before:from-[#06b6d4] before:to-[#8b5cf6] before:content-[''] after:absolute after:inset-[1px] after:rounded-[7px] after:bg-[#0a0a0f] after:transition-all after:content-[''] hover:after:bg-gradient-to-r hover:after:from-[#06b6d4] hover:after:to-[#8b5cf6] hover:text-[#0a0a0f]">
-            <span className="relative z-10 flex items-center gap-2">
-              <Download size={20} />
-              Download Resume
-            </span>
-          </button>
-        </motion.div>
+          Tuheen.
+        </motion.h1>
 
-        {/* Floating tech icons */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.3 }}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="text-[clamp(40px,8vw,80px)] font-extrabold leading-[1.1] text-[#8892b0]"
         >
-          <FloatingTechIcons />
+          I build reliable infrastructure.
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-6 max-w-lg text-lg leading-relaxed text-[#8892b0]"
+        >
+          I&apos;m a DevOps engineer specializing in CI/CD pipelines, cloud infrastructure, 
+          and container orchestration. Currently focused on building automated, 
+          self-healing systems at scale.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="mt-12"
+        >
+          <MagneticButton onClick={() => handleNavClick("#projects")}>
+            Check out my projects <ArrowRight className="ml-2 inline h-4 w-4" />
+          </MagneticButton>
         </motion.div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
-      >
-        <span className="text-xs font-medium tracking-wider text-[#94a3b8]">
-          Scroll to explore
-        </span>
-        <ChevronDown className="scroll-bounce h-6 w-6 text-[#06b6d4]" />
-      </motion.div>
     </section>
   )
 }
